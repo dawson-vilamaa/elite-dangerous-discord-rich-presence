@@ -1,0 +1,13 @@
+{
+  "name": "elite-dangerous-discord-rich-presence",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "bin": "bin.js",
+  "author": "dawson-vilamaa",
+  "license": "MIT",
+  "dependencies": {
+    "discord-rich-presence": "0.0.8",
+    "fs": "0.0.1-security"
+  }
+}
