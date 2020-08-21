@@ -1,28 +1,30 @@
 let client = require("discord-rich-presence")("744025052118253578");
 const exec = require("child_process").exec;
 const fs = require("fs");
+const { app, Menu, Tray, nativeImage } = require("electron");
 
-//EVENTS
-//LoadGame - Commander, Ship
-//Location - StarSystem, Body, StationName
-//Docked - StationName, StarSystem
-//DockingRequested - StationName
-//FSDJump - StarSystem
-//SupercruiseEntry - StarSystem
-//SupercruiseExit - StarSystem, Body
-//ShipyardSwap - ShipType
-//LaunchSRV
-//DockSRV
-//Loadout - Ship
-//ApproachBody - StarSystem, Body
-//LeaveBody - StarSystem, Body
+//icon
+let image = nativeImage.createFromPath(__dirname + "/EDLogo.ico");
+image.setTemplateImage(true);
+
+//electron system tray
+let tray = app.whenReady().then(() => {
+    tray = new Tray("EDLogo.ico");
+    const contextMenu = Menu.buildFromTemplate([
+        {label: "Exit", type: "normal", click() {
+            app.quit();
+            process.exit(0);
+        }}
+    ]);
+    tray.setToolTip("Elite Dangerous Rich Presence for Discord");
+    tray.setContextMenu(contextMenu);
+});
 
 let logPath = `${process.env.USERPROFILE}/Saved Games/Frontier Developments/Elite Dangerous`;
 let logFile;
 let isPlaying = false;
 let startTime;
 let lastLogIndex = 0;
-let firstRefreshDone = false;
 
 let shipNames = [
     "adder", "Adder",
@@ -73,13 +75,11 @@ let nearPlanet;
 let planetName;
 let inSRV = false;
 
-module.exports = function() {
-    refresh();
+refresh();
 
-    setInterval(() => {
-        refresh();
-    }, 5000);
-}
+setInterval(() => {
+    refresh();
+}, 5000);
 
 function refresh() {
     //check if the Elite Dangerous client is running (not the launcher)
