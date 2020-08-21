@@ -1,4 +1,4 @@
-# elite-dangerous-discord-rich-presence
+# Elite Dangerous Rich Presence for Discord
 Turns Elite Dangerous's game status into a rich presence version displaying information about your location and current ship
 
 Example of rich presence:
