@@ -25,6 +25,7 @@ let logFile;
 let isPlaying = false;
 let startTime;
 let lastLogIndex = 0;
+let firstRefreshDone = false;
 
 let shipNames = [
     "adder", "Adder",
@@ -93,6 +94,9 @@ function refresh() {
 
             //set rich presence
             let cmdrText;
+            let systemText;
+            if (bodyName === systemName) bodyName = undefined;
+            if (systemName) systemText = `${systemName} System`
             if (cmdrName) cmdrText = `CMDR ${cmdrName}`;
             let shipText;
             let imageKeyText;
@@ -106,7 +110,7 @@ function refresh() {
             }
 
             client.updatePresence({
-                details: `${systemName} System`,
+                details: systemText,
                 state: bodyName,
                 startTimestamp: startTime,
                 largeImageKey: imageKeyText,
@@ -136,14 +140,11 @@ function watchLogFile() {
     let latest = dates.sort().reverse()[0];
 
     let templogFile = files.find(file => file.indexOf(latest) !== -1);
-    if (logFile !== templogFile) {
+    if (logFile !== templogFile || firstRefreshDone === false) {
+        firstRefreshDone = true;
         lastLogIndex = 0;
         let lastLogFile = logFile;
         logFile = templogFile;
-        if (firstRefreshDone === false) {
-            updateInfo();
-            firstRefreshDone = true;
-        }
         //watch latest log file
         fs.watchFile(`${logPath}/${logFile}`, {encoding: "utf-8"}, (current, previous) => {
             updateInfo();
