@@ -145,6 +145,7 @@ function watchLogFile() {
         lastLogIndex = 0;
         let lastLogFile = logFile;
         logFile = templogFile;
+        updateInfo();
         //watch latest log file
         fs.watchFile(`${logPath}/${logFile}`, {encoding: "utf-8"}, (current, previous) => {
             updateInfo();
@@ -250,6 +251,15 @@ function updateInfo() {
             case "Undocked": //StationName
                 console.log(`Undocked - StationName: ${e.StationName}`);
                 if (nearPlanet === true) bodyName = undefined;
+            break;
+
+            case "JoinACrew":
+                console.log("JoinACrew");
+                inSRV = false;
+            break;
+
+            case "QuitACrew":
+                console.log("QuitACrew");
             break;
         }
     }
